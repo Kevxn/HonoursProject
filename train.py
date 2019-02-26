@@ -11,6 +11,13 @@ import random
 
 from sklearn.neighbors import KNeighborsClassifier
 
+def preprocess(tweet):
+    # this function should take in the tweet and remove features from 
+    # it like URL's @handles and hashtags
+    # returns the formatted tweet for further preprocessing
+    pass
+
+
 stop_words = stopwords.words("english")
 wn_lemmatizer = WordNetLemmatizer()
 # col 1 - 0: negative, 2: neutral, 4: positive
