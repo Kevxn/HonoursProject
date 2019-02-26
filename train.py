@@ -15,7 +15,7 @@ stop_words = stopwords.words("english")
 wn_lemmatizer = WordNetLemmatizer()
 # col 1 - 0: negative, 2: neutral, 4: positive
 
-df = pd.read_csv("sentiment140\\training.1600000.processed.noemoticon.csv", encoding='latin-1')
+df = pd.read_csv("sentiment140/training.1600000.processed.noemoticon.csv", encoding='latin-1')
 df = df.sample(frac=0.04)
 
 # PREPROCESSING PART
