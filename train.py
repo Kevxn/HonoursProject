@@ -54,7 +54,7 @@ print(features)
 # print("features: " + str(features.shape))
 # print(y.shape)s
 print("------------")
-
+print(features.shape, y.shape)
 
 X_train, X_test, y_train, y_test = train_test_split(features, y, test_size=0.2)
 
