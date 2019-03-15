@@ -26,9 +26,9 @@ if os.name == "nt":
         tfv = pickle.load(f)
     model = load_model("F:\\Hons Project\\models\\" + model_name)
 else:
-    with open("/models/TfidfVectorizer" + model_name + ".pickle", "rb") as f:
+    with open("../models/TfidfVectorizer" + model_name + ".pickle", "rb") as f:
         tfv = pickle.load(f)
-    model = load_model("/models/" + model_name)
+    model = load_model("../models/" + model_name)
 
 stop_words = stopwords.words('english')
 wn_lemmatizer = WordNetLemmatizer()
