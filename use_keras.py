@@ -12,18 +12,28 @@ import tensorflow as tf
 import random
 import gensim
 import re
+import os
 import pickle
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.layers import Dense, Embedding, LSTM, SpatialDropout1D, Flatten
 from tensorflow.keras.models import Sequential, save_model, load_model
 
-model = load_model("F:\\Hons Project\\models\\full_8epoch_64_batch.h5")
+model_name = "full_8epoch_64_batch.h5"
+
+if os.name == "nt":
+    with open("F:\\Hons Project\\models\\TfidfVectorizer" + model_name + ".pickle", "rb") as f:
+        tfv = pickle.load(f)
+    model = load_model("F:\\Hons Project\\models\\" + model_name)
+else:
+    with open("/models/TfidfVectorizer" + model_name + ".pickle", "rb") as f:
+        tfv = pickle.load(f)
+    model = load_model("/models/" + model_name)
 
 stop_words = stopwords.words('english')
 wn_lemmatizer = WordNetLemmatizer()
-def preprocess_tweet(tweet):
 
+def preprocess_tweet(tweet):
     # remove emoticons
     tweet = re.sub('[:]([\(\)\/\\\[\]]|[A-Za-z1-9@])', '', tweet)
     # remove urls
@@ -63,11 +73,6 @@ for row in TEST_DATA:
     words.append(lemmatized)
 
 flattened_words.append([' '.join(tweet) for tweet in words])
-
-model_name = "full_8epoch_64_batch.h5"
-
-with open("F:\\Hons Project\\models\\TfidfVectorizer" + model_name + ".pickle", "rb") as f:
-    tfv = pickle.load(f)
 
 features=tfv.transform(flattened_words[0])
 
