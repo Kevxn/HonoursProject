@@ -10,6 +10,7 @@ from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer, TfidfVectorizer
 from nltk.stem import WordNetLemmatizer
 import random
+import pickle
 
 from sklearn.neighbors import KNeighborsClassifier
 
@@ -38,7 +39,7 @@ wn_lemmatizer = WordNetLemmatizer()
 # col 1 - 0: negative, 2: neutral, 4: positive
 
 df = pd.read_csv("sentiment140/training.1600000.processed.noemoticon.csv", encoding='latin-1')
-df = df.sample(frac=0.05)
+df = df.sample(frac=0.99)
 
 # PREPROCESSING PART
 
@@ -54,7 +55,7 @@ print(df.head())
 for row in X:
     tweet = preprocess(row[0])
     stop_words_removed = [word.lower() for word in tweet.split() if word not in (stop_words)]
-    lemmatized = [wn_lemmatizer.lemmatize(tweet) for tweet in stop_words_removed]
+    lemmatized = [wn_lemmatizer.lemmatize(tweet, pos='v') for tweet in stop_words_removed]
     words.append(lemmatized)
 
 flattened_words.append([' '.join(tweet) for tweet in words])
@@ -75,7 +76,7 @@ print(features.shape, y.shape)
 X_train, X_test, y_train, y_test = train_test_split(features, y, test_size=0.2)
 
 # clf = LogisticRegression()
-clf = svm.SVC()
+clf = svm.LinearSVC(C=0.1)
 
 clf.fit(X_train, y_train)
 train_confidence = clf.score(X_train, y_train)
@@ -121,3 +122,13 @@ print(correct, wrong, total)
 print("Script ran in {} seconds".format(time.time() - time1))
 # 79.78% logistic regression test accuracy (99% of training dataset) average of 5 runs
 # 0.7577% accuracy LinearSVC test accuracy (99% of training dataset)
+# 80.78% accuracy LinearSVC C=0.1 test accuracy (10% of training dataset) (79.44% best of 5)
+
+model_name = "SVM0.99datasetC0.1.h5"
+vectorizer_filename = "F:\\Hons Project\\models\\TfidfVectorizer" + model_name + ".pickle"
+
+with open(vectorizer_filename, "wb") as f:
+    pickle.dump(tfv, f)
+
+with open("F:\\Hons Project\\models\\" + model_name, "wb") as f:
+    pickle.dump(clf, f)

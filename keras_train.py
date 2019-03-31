@@ -49,7 +49,7 @@ flattened_words = []
 for row in X:
     tweet = preprocess_tweet(row[0])
     stop_words_removed = [word.lower() for word in tweet.split() if word not in (stop_words)]
-    lemmatized = [wn_lemmatizer.lemmatize(tweet) for tweet in stop_words_removed]
+    lemmatized = [wn_lemmatizer.lemmatize(tweet, pos='v') for tweet in stop_words_removed]
     words.append(lemmatized)
 
 flattened_words.append([' '.join(tweet) for tweet in words])
@@ -63,16 +63,14 @@ embed_dim = 128
 lstm_out = 196
 
 model = Sequential()
-# model.add(Embedding(features.shape[0]), 128, 50000, 128)
-# model.add(SpatialDropout1D(0.4))
-# model.add(LSTM(lstm_out, dropout=0.2, recurrent_dropout=0.2))
 model.add(Dense(128, activation='relu', input_dim=len(tfv.get_feature_names())))
-#model.add(LSTM(input_shape=(128, len(tfv.get_feature_names()))))
+model.add(Dropout(0.4))
 model.add(Dense(128, activation='relu'))
-model.add(Dropout(0.5))
+model.add(Dropout(0.3))
 model.add(Dense(128, activation='relu'))
 model.add(Dropout(0.2))
-model.add(Activation(activation='softmax'))
+model.add(Dense(64, activation='relu'))
+model.add(Dense(2, activation='softmax'))
 
 model.compile(loss = 'binary_crossentropy', optimizer='adam', metrics = ['accuracy'])
 print(model.summary())
@@ -81,7 +79,7 @@ print(model.summary())
 X_train, X_test, y_train, y_test = train_test_split(features, y, test_size=0.3, random_state=42)
 
 batch_size = 64
-model.fit(X_train, y_train, epochs = 2, batch_size=batch_size)
+model.fit(X_train, y_train, epochs = 4, batch_size=batch_size)
 
 score, acc = model.evaluate(X_test, y_test, verbose=2, batch_size=batch_size)
 print("score: {}".format(score))
@@ -89,10 +87,11 @@ print("acc: {}".format(acc))
 
 # test model
 
-model_name = "Dense0.1dataset_4epoch_64_batch_dropout.h5"
+model_name = "Dense0.1dataset_4epoch_64_batch_3_dropout.h5"
 vectorizer_filename = "F:\\Hons Project\\models\\TfidfVectorizer" + model_name + ".pickle"
 
 with open(vectorizer_filename, "wb") as f:
     pickle.dump(tfv, f)
 
 save_model(model, "F:\\Hons Project\\models\\" + model_name, True, True)
+# 0.1 dataset 4 epochs 64 batch size 3 dropout layers gives 77.7% accuracy on TEST set

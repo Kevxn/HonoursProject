@@ -19,18 +19,20 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.layers import Dense, Embedding, LSTM, SpatialDropout1D, Flatten
 from tensorflow.keras.models import Sequential, save_model, load_model
 
-model_name = "SVM0.1datasetC0.1.h5"
+model_name = "SVM0.99datasetC0.1.h5"
 
 if os.name == "nt":
     with open("F:\\Hons Project\\models\\TfidfVectorizer" + model_name + ".pickle", "rb") as f:
         tfv = pickle.load(f)
-    model = load_model("F:\\Hons Project\\models\\" + model_name)
-    
+
+    with open("F:\\Hons Project\\models\\" + model_name, "rb") as f:
+        model = pickle.load(f)
 else:
     with open("/models/TfidfVectorizer" + model_name + ".pickle", "rb") as f:
         tfv = pickle.load(f)
-    model = load_model("/models/" + model_name)
 
+    with open("/models/" + model_name, "rb") as f:
+        model = pickle.load(f)
 
 stop_words = stopwords.words('english')
 wn_lemmatizer = WordNetLemmatizer()
@@ -49,6 +51,7 @@ def preprocess_tweet(tweet):
     return tweet
 
 def get_sentiment(sentiment_vector):
+    print(sentiment_vector)
     neg, pos = list(sentiment_vector)
     if pos > neg:
         # return "Positive ({}%)".format(pos * 100)
@@ -78,20 +81,18 @@ flattened_words.append([' '.join(tweet) for tweet in words])
 
 features=tfv.transform(flattened_words[0])
 
-predictions = []
-prediction = model.predict([features])
-for pred in prediction:
-    prd = get_sentiment(pred)
-    predictions.append(prd)
-    print(prd)
+# predictions = []
+prediction = model.predict(features)
 
 """ for manual testing """
 correct = 0
 wrong = 0
 total = len(sentiment)
 
+print(prediction, len(prediction))
+
 for i in range(len(prediction)):
-    if predictions[i] == sentiment[i]:
+    if prediction[i] == sentiment[i]:
         correct = correct + 1
     elif sentiment[i] == 2:
         pass
