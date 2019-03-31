@@ -16,7 +16,7 @@ import os
 import pickle
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-from tensorflow.keras.layers import Dense, Embedding, LSTM, SpatialDropout1D, Flatten
+from tensorflow.keras.layers import Dense, Embedding, LSTM, SpatialDropout1D, Flatten, Dropout, Activation
 from tensorflow.keras.models import Sequential, save_model
 
 
@@ -26,7 +26,7 @@ def preprocess_tweet(tweet):
     # remove emoticons
     tweet = re.sub('[:]([\(\)\/\\\[\]]|[A-Za-z1-9@])', '', tweet)
     # remove urls
-    tweet = re.sub('((www\.[^\s]+)|(https?://[^\s]+))', '', tweet)
+    tweet = re.sub('(www|http)\S+', '', tweet)
     #convert all @username to "AT_USER"
     tweet = re.sub('@[^\s]+', '', tweet)
     #fix white spacing
@@ -67,9 +67,12 @@ model = Sequential()
 # model.add(SpatialDropout1D(0.4))
 # model.add(LSTM(lstm_out, dropout=0.2, recurrent_dropout=0.2))
 model.add(Dense(128, activation='relu', input_dim=len(tfv.get_feature_names())))
+#model.add(LSTM(input_shape=(128, len(tfv.get_feature_names()))))
 model.add(Dense(128, activation='relu'))
+model.add(Dropout(0.5))
 model.add(Dense(128, activation='relu'))
-model.add(Dense(2, activation='softmax'))
+model.add(Dropout(0.2))
+model.add(Activation(activation='softmax'))
 
 model.compile(loss = 'binary_crossentropy', optimizer='adam', metrics = ['accuracy'])
 print(model.summary())
@@ -78,7 +81,7 @@ print(model.summary())
 X_train, X_test, y_train, y_test = train_test_split(features, y, test_size=0.3, random_state=42)
 
 batch_size = 64
-model.fit(X_train, y_train, epochs = 4, batch_size=batch_size)
+model.fit(X_train, y_train, epochs = 2, batch_size=batch_size)
 
 score, acc = model.evaluate(X_test, y_test, verbose=2, batch_size=batch_size)
 print("score: {}".format(score))
@@ -86,7 +89,7 @@ print("acc: {}".format(acc))
 
 # test model
 
-model_name = "LSTM_0.1dataset_4epoch_64_batch.h5"
+model_name = "Dense0.1dataset_4epoch_64_batch_dropout.h5"
 vectorizer_filename = "F:\\Hons Project\\models\\TfidfVectorizer" + model_name + ".pickle"
 
 with open(vectorizer_filename, "wb") as f:

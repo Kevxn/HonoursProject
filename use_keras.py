@@ -19,7 +19,7 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.layers import Dense, Embedding, LSTM, SpatialDropout1D, Flatten
 from tensorflow.keras.models import Sequential, save_model, load_model
 
-model_name = "full_8epoch_64_batch.h5"
+model_name = "Dense0.1dataset_4epoch_64_batch_dropout.h5"
 
 if os.name == "nt":
     with open("F:\\Hons Project\\models\\TfidfVectorizer" + model_name + ".pickle", "rb") as f:
@@ -37,7 +37,7 @@ def preprocess_tweet(tweet):
     # remove emoticons
     tweet = re.sub('[:]([\(\)\/\\\[\]]|[A-Za-z1-9@])', '', tweet)
     # remove urls
-    tweet = re.sub('((www\.[^\s]+)|(https?://[^\s]+))', '', tweet)
+    tweet = re.sub('(www|http)\S+', '', tweet)
     # remove usernames
     tweet = re.sub('@[^\s]+', '', tweet)
     # remove whitespaces
