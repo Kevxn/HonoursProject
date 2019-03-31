@@ -35,11 +35,11 @@ def preprocess_tweet(tweet):
     tweet = re.sub(r'#([^\s]+)', r'\1', tweet)
     return tweet
 
-if os.name == "NT":
+if os.name == "nt":
     df = pd.read_csv("sentiment140\\testdata.manual.2009.06.14.csv")
 else:
     # df = pd.read_csv("sentiment140/testdata.manual.2009.06.14.csv")
-    df = pd.read_csv("C:\\Users\\kevin\\Documents\\Hons Project\\scripts\\sentiment140\\testdata.manual.2009.06.14.csv")
+    df = pd.read_csv("sentiment140/testdata.manual.2009.06.14.csv")
 
 tweets = df['tweet']
 sentiment = df['sentiment']
