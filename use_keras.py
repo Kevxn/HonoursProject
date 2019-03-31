@@ -19,17 +19,23 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.layers import Dense, Embedding, LSTM, SpatialDropout1D, Flatten
 from tensorflow.keras.models import Sequential, save_model, load_model
 
-model_name = "SVM0.1datasetC0.1.h5"
+model_name = "Dense0.1dataset_4epoch_64_batch_3_dropout.h5"
 
 if os.name == "nt":
     with open("F:\\Hons Project\\models\\TfidfVectorizer" + model_name + ".pickle", "rb") as f:
         tfv = pickle.load(f)
+    
+    df = pd.read_csv("C:\\Users\\kevin\\Documents\\Hons Project\\scripts\\sentiment140\\testdata.manual.2009.06.14.csv")
+
     model = load_model("F:\\Hons Project\\models\\" + model_name)
     
 else:
-    with open("../models/TfidfVectorizer" + model_name + ".pickle", "rb") as f:
+    with open("/Volumes/Samsung T5/Hons Project/models/TfidfVectorizer" + model_name + ".pickle", "rb") as f:
         tfv = pickle.load(f)
-    model = load_model("../models/" + model_name)
+
+    df = pd.read_csv("sentiment140/testdata.manual.2009.06.14.csv")
+
+    model = load_model("/Volumes/Samsung T5/Hons Project/models/" + model_name)
 
 
 stop_words = stopwords.words('english')
@@ -61,7 +67,7 @@ words = []
 flattened_words = []
 
 """ for manual testing """
-df = pd.read_csv("C:\\Users\\kevin\\Documents\\Hons Project\\scripts\\sentiment140\\testdata.manual.2009.06.14.csv")
+
 sentiment = df['sentiment']
 tweet_text = df['tweet']
 

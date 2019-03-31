@@ -25,13 +25,17 @@ if os.name == "nt":
     with open("F:\\Hons Project\\models\\TfidfVectorizer" + model_name + ".pickle", "rb") as f:
         tfv = pickle.load(f)
 
+    df = pd.read_csv("C:\\Users\\kevin\\Documents\\Hons Project\\scripts\\sentiment140\\testdata.manual.2009.06.14.csv")
+
     with open("F:\\Hons Project\\models\\" + model_name, "rb") as f:
         model = pickle.load(f)
 else:
-    with open("/models/TfidfVectorizer" + model_name + ".pickle", "rb") as f:
+    with open("/Volumes/Samsung T5/Hons Project/models/TfidfVectorizer" + model_name + ".pickle", "rb") as f:
         tfv = pickle.load(f)
 
-    with open("/models/" + model_name, "rb") as f:
+    df = pd.read_csv("sentiment140/testdata.manual.2009.06.14.csv")
+
+    with open("/Volumes/Samsung T5/Hons Project/models/" + model_name, "rb") as f:
         model = pickle.load(f)
 
 stop_words = stopwords.words('english')
@@ -64,7 +68,7 @@ words = []
 flattened_words = []
 
 """ for manual testing """
-df = pd.read_csv("C:\\Users\\kevin\\Documents\\Hons Project\\scripts\\sentiment140\\testdata.manual.2009.06.14.csv")
+
 sentiment = df['sentiment']
 tweet_text = df['tweet']
 
