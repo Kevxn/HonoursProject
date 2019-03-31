@@ -38,7 +38,7 @@ wn_lemmatizer = WordNetLemmatizer()
 # col 1 - 0: negative, 2: neutral, 4: positive
 
 df = pd.read_csv("sentiment140/training.1600000.processed.noemoticon.csv", encoding='latin-1')
-df = df.sample(frac=0.99)
+df = df.sample(frac=0.05)
 
 # PREPROCESSING PART
 
@@ -75,7 +75,7 @@ print(features.shape, y.shape)
 X_train, X_test, y_train, y_test = train_test_split(features, y, test_size=0.2)
 
 # clf = LogisticRegression()
-clf = svm.LinearSVC()
+clf = svm.SVC()
 
 clf.fit(X_train, y_train)
 train_confidence = clf.score(X_train, y_train)
